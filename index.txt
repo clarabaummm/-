@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌙 Salvar a Santiago - Juego de Pociones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(to bottom, #000000, #581c87, #312e81);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            border-radius: 0.5rem;
+            backdrop-filter: blur(4px);
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .card-wide {
+            max-width: 1000px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .text-lg {
+            font-size: 1.125rem;
+            line-height: 1.75;
+            margin-bottom: 1rem;
+        }
+
+        .text-purple { color: #a855f7; }
+        .text-green { color: #22c55e; }
+        .text-orange { color: #f97316; }
+        .text-blue { color: #3b82f6; }
+        .text-red { color: #ef4444; }
+        .text-yellow { color: #eab308; }
+        .text-gray { color: #9ca3af; }
+
+        .input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.375rem;
+            background: rgba(17, 24, 39, 0.9);
+            color: white;
+            border: 1px solid rgba(168, 85, 247, 0.6);
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: #a855f7;
+            box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #6d28d9;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #a855f7;
+            color: #a855f7;
+        }
+
+        .btn-outline:hover {
+            background: rgba(168, 85, 247, 0.2);
+        }
+
+        .btn-green {
+            background: #059669;
+            color: white;
+        }
+
+        .btn-green:hover {
+            background: #047857;
+        }
+
+        .btn-orange {
+            background: #ea580c;
+            color: white;
+        }
+
+        .btn-orange:hover {
+            background: #c2410c;
+        }
+
+        .btn-blue {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-blue:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-outline-green {
+            background: transparent;
+            border: 1px solid #22c55e;
+            color: #22c55e;
+        }
+
+        .btn-outline-green:hover {
+            background: rgba(34, 197, 94, 0.2);
+        }
+
+        .btn-outline-orange {
+            background: transparent;
+            border: 1px solid #f97316;
+            color: #f97316;
+        }
+
+        .btn-outline-orange:hover {
+            background: rgba(249, 115, 22, 0.2);
+        }
+
+        .btn-outline-blue {
+            background: transparent;
+            border: 1px solid #3b82f6;
+            color: #3b82f6;
+        }
+
+        .btn-outline-blue:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-between {
+            justify-content: space-between;
+        }
+
+        .flex-center {
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gap-4 {
+            gap: 1rem;
+        }
+
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mt-2 { margin-top: 0.5rem; }
+
+        .image-container {
+            margin-bottom: 1.5rem;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 2px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .image-container.orange {
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+
+        .image-container.blue {
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .ingredient-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #4b5563;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .ingredient-card:hover {
+            border-color: rgba(168, 85, 247, 0.5);
+            background: rgba(88, 28, 135, 0.2);
+        }
+
+        .ingredient-card.selected {
+            background: rgba(124, 58, 237, 0.5);
+            border-color: #a855f7;
+            transform: scale(1.05);
+        }
+
+        .ingredient-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .ingredient-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .ingredient-selected {
+            color: #a855f7;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .result-item {
+            font-size: 0.875rem;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+        }
+
+        .result-correct {
+            background: rgba(5, 150, 105, 0.5);
+            color: #6ee7b7;
+        }
+
+        .result-incorrect {
+            background: rgba(185, 28, 28, 0.5);
+            color: #fca5a5;
+        }
+
+        .result-box {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .review-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Backgrounds específicos para cada pantalla */
+        .bg-forest {
+            background: linear-gradient(to bottom, #14532d, #374151, #000000);
+        }
+
+        .bg-house {
+            background: linear-gradient(to bottom, #9a3412, #991b1b, #000000);
+        }
+
+        .bg-river {
+            background: linear-gradient(to bottom, #1e3a8a, #0f766e, #000000);
+        }
+
+        .bg-ingredients {
+            background: linear-gradient(to bottom, #581c87, #312e81, #000000);
+        }
+
+        .bg-success {
+            background: linear-gradient(to bottom, #14532d, #064e3b, #000000);
+        }
+
+        .bg-failure {
+            background: linear-gradient(to bottom, #991b1b, #000000, #374151);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.25rem;
+            }
+            
+            .ingredients-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .review-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .flex-between {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de Nombre -->
+    <div id="screen-nombre" class="container">
+        <div class="card text-center">
+            <h1 class="title">🧙‍♂️ ¿Quién intentará salvar a Santiago?</h1>
+            <p class="text-gray mb-4">Escribí tu nombre para comenzar esta misión mágica.</p>
+            <input 
+                type="text" 
+                id="player-name" 
+                class="input" 
+                placeholder="Tu nombre..." 
+                maxlength="20"
+                autofocus
+            >
+            <button id="start-btn" class="btn btn-primary" disabled>Comenzar</button>
+        </div>
+    </div>
+
+    <!-- Pantalla de Introducción -->
+    <div id="screen-intro" class="container hidden">
+        <div class="card text-center">
+            <div class="mb-6" style="font-size: 4rem;">🌙</div>
+            <h1 class="title">🌙 SALVAR A SANTIAGO 🌙</h1>
+            <div class="text-lg mb-8">
+                <p class="mb-4">
+                    <span id="player-name-intro" class="text-purple"></span>, la luna llena se alza en el cielo
+                    nocturno. Santiago fue mordido por un lobizón y solo tienes hasta la medianoche para salvarlo.
+                </p>
+                <p class="mb-4">
+                    Debes recolectar pistas en tres lugares místicos y preparar una poción con los ingredientes correctos.
+                    <span class="text-red"> Solo puedes elegir 3 ingredientes</span>, así que elige sabiamente...
+                </p>
+                <div class="flex flex-center gap-4 text-yellow">
+                    <span>⏰</span>
+                    <span>El tiempo se agota...</span>
+                </div>
+            </div>
+            <button id="start-quest-btn" class="btn btn-primary">🚀 Comenzar la Búsqueda</button>
+        </div>
+    </div>
+
+    <!-- Pantalla del Bosque -->
+    <div id="screen-bosque" class="container bg-forest hidden">
+        <div class="card">
+            <div class="flex flex-center mb-6">
+                <span style="font-size: 3rem; margin-right: 0.75rem;">🌲</span>
+                <h2 class="subtitle text-green">El Bosque Encantado</h2>
+            </div>
+            
+            <div class="image-container">
+                <img src="images/bosque.png" alt="Bosque encantado con flor azul brillante bajo la luna creciente y árbol ancestral con corteza rugosa">
+            </div>
+            
+            <p class="text-center text-green mb-8" style="font-style: italic;">
+                Dicen que bajo la luna llena, crece lo único capaz de revertir la maldición.
+            </p>
+            
+            <div class="flex flex-between">
+                <button id="back-to-intro-btn" class="btn btn-outline">← Volver</button>
+                <button id="to-casa-btn" class="btn btn-green">Continuar a la Casa →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla de la Casa -->
+    <div id="screen-casa" class="container bg-house hidden">
+        <div class="card">
+            <div class="flex flex-center mb-6">
+                <span style="font-size: 3rem; margin-right: 0.75rem;">🏠</span>
+                <h2 class="subtitle text-orange">La Casa Abandonada</h2>
+            </div>
+            
+            <div class="image-container orange">
+                <img src="images/casa.png" alt="Casa abandonada con gato tricolor sentado en un sillón y una caja con patas de conejo">
+            </div>
+            
+            <p class="text-center text-orange mb-8" style="font-style: italic;">
+                Los signos están ahí… sólo hay que saber leer lo que no habla.
+            </p>
+            
+            <div class="flex flex-between">
+                <button id="back-to-bosque-btn" class="btn btn-outline">← Volver al Bosque</button>
+                <button id="to-rio-btn" class="btn btn-orange">Continuar al Río →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla del Río -->
+    <div id="screen-rio" class="container bg-river hidden">
+        <div class="card">
+            <div class="flex flex-center mb-6">
+                <span style="font-size: 3rem; margin-right: 0.75rem;">🌊</span>
+                <h2 class="subtitle text-blue">El Río Sagrado</h2>
+            </div>
+            
+            <div class="image-container blue">
+                <img src="images/rio.png" alt="Río sagrado nocturno con piedra brillante en el centro del agua bajo la luna creciente">
+            </div>
+            
+            <p class="text-center text-blue mb-8" style="font-style: italic;">
+                La corriente parece proteger algo importante.
+            </p>
+            
+            <div class="flex flex-between">
+                <button id="back-to-casa-btn" class="btn btn-outline">← Volver a la Casa</button>
+                <button id="to-ingredientes-btn" class="btn btn-blue">Preparar la Poción →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla de Ingredientes -->
+    <div id="screen-ingredientes" class="container bg-ingredients hidden">
+        <div class="card card-wide">
+            <div class="text-center mb-6">
+                <div class="flex flex-center mb-4">
+                    <span style="font-size: 2rem; margin-right: 0.75rem;">✨</span>
+                    <h2 class="subtitle">Preparar la Poción</h2>
+                    <span style="font-size: 2rem; margin-left: 0.75rem;">✨</span>
+                </div>
+                
+                <p class="text-lg mb-4">
+                    <span id="player-name-ingredients" class="text-purple"></span>, ha llegado el momento decisivo.
+                    Elige exactamente <span class="text-yellow">3 ingredientes</span> para la poción que salvará a Santiago.
+                </p>
+                
+                <div class="text-gray mb-4">Ingredientes seleccionados: <span id="selected-count">0</span>/3</div>
+                
+                <!-- Botones para revisar pistas -->
+                <div class="review-buttons">
+                    <button id="review-bosque-btn" class="btn btn-outline-green">
+                        🌲 Ver Bosque
+                    </button>
+                    <button id="review-casa-btn" class="btn btn-outline-orange">
+                        🏠 Ver Casa  
+                    </button>
+                    <button id="review-rio-btn" class="btn btn-outline-blue">
+                        🌊 Ver Río
+                    </button>
+                </div>
+                
+                <p class="text-gray" style="font-size: 0.875rem; font-style: italic;">
+                    💡 Puedes revisar las pistas de cada lugar antes de decidir
+                </p>
+            </div>
+            
+            <div id="ingredients-grid" class="ingredients-grid">
+                <!-- Los ingredientes se generarán con JavaScript -->
+            </div>
+            
+            <div class="text-center">
+                <button id="create-potion-btn" class="btn btn-primary" disabled>
+                    Selecciona 3 ingredientes más
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla de Resultado -->
+    <div id="screen-resultado" class="container hidden">
+        <div class="card text-center">
+            <div id="result-icon" class="mb-6" style="font-size: 4rem;"></div>
+            <h2 id="result-title" class="subtitle mb-4"></h2>
+            <div id="result-message" class="text-lg mb-6"></div>
+            
+            <div class="result-box">
+                <h3 class="mb-2">Ingredientes utilizados:</h3>
+                <div id="result-ingredients" class="result-grid"></div>
+                <p id="result-count" class="text-gray mt-2"></p>
+            </div>
+            
+            <div class="flex flex-center gap-4">
+                <button id="play-again-btn" class="btn btn-primary">🔄 Jugar de Nuevo</button>
+                <button id="change-ingredients-btn" class="btn btn-outline">← Cambiar Ingredientes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Estado del juego
+        let gameState = {
+            currentScreen: 'nombre',
+            playerName: '',
+            selectedIngredients: [],
+            visitedLocations: []
+        };
+
+        // Ingredientes del juego
+        const ingredients = [
+            { id: "flor-azul", name: "Flor azul", correct: true, icon: "🌸" },
+            { id: "patas-conejo", name: "Patas de conejo", correct: true, icon: "🐾" },
+            { id: "corteza-arbol", name: "Corteza del árbol más viejo", correct: true, icon: "🌳" },
+            { id: "piedra-rio", name: "Piedra de río", correct: true, icon: "💎" },
+            { id: "bigote-gato", name: "Bigote de gato tricolor", correct: true, icon: "😸" },
+            { id: "pimienta-negra", name: "Pimienta negra", correct: false, icon: "🌶️" },
+            { id: "hueso-extrano", name: "Hueso extraño", correct: false, icon: "🦴" },
+            { id: "cascara-cebolla", name: "Cáscara de cebolla", correct: false, icon: "🧅" }
+        ];
+
+        // Funciones de utilidad
+        function showScreen(screenName) {
+            // Ocultar todas las pantallas
+            document.querySelectorAll('[id^="screen-"]').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            
+            // Mostrar la pantalla solicitada
+            document.getElementById(`screen-${screenName}`).classList.remove('hidden');
+            gameState.currentScreen = screenName;
+            
+            // Cambiar el fondo del body según la pantalla
+            const body = document.body;
+            body.className = ''; // Limpiar clases anteriores
+            
+            switch(screenName) {
+                case 'bosque':
+                    body.classList.add('bg-forest');
+                    break;
+                case 'casa':
+                    body.classList.add('bg-house');
+                    break;
+                case 'rio':
+                    body.classList.add('bg-river');
+                    break;
+                case 'ingredientes':
+                    body.classList.add('bg-ingredients');
+                    break;
+                case 'resultado':
+                    const result = evaluateResult();
+                    body.classList.add(result === 'bueno' ? 'bg-success' : 'bg-failure');
+                    break;
+            }
+
+            updateNavigationButtons();
+        }
+
+        function updateSelectedCount() {
+            document.getElementById('selected-count').textContent = gameState.selectedIngredients.length;
+            
+            const btn = document.getElementById('create-potion-btn');
+            if (gameState.selectedIngredients.length === 3) {
+                btn.textContent = '🧪 Crear Poción';
+                btn.disabled = false;
+            } else {
+                btn.textContent = `Selecciona ${3 - gameState.selectedIngredients.length} ingrediente(s) más`;
+                btn.disabled = true;
+            }
+        }
+
+        function toggleIngredient(ingredientId) {
+            const index = gameState.selectedIngredients.indexOf(ingredientId);
+            
+            if (index > -1) {
+                // Deseleccionar ingrediente
+                gameState.selectedIngredients.splice(index, 1);
+            } else if (gameState.selectedIngredients.length < 3) {
+                // Seleccionar ingrediente
+                gameState.selectedIngredients.push(ingredientId);
+            }
+            
+            updateIngredientsDisplay();
+            updateSelectedCount();
+        }
+
+        function updateIngredientsDisplay() {
+            const grid = document.getElementById('ingredients-grid');
+            grid.innerHTML = '';
+            
+            ingredients.forEach(ingredient => {
+                const isSelected = gameState.selectedIngredients.includes(ingredient.id);
+                
+                const card = document.createElement('div');
+                card.className = `ingredient-card ${isSelected ? 'selected' : ''}`;
+                card.onclick = () => toggleIngredient(ingredient.id);
+                
+                card.innerHTML = `
+                    <div class="ingredient-icon">${ingredient.icon}</div>
+                    <div class="ingredient-name">${ingredient.name}</div>
+                    ${isSelected ? '<div class="ingredient-selected">✓ Seleccionado</div>' : ''}
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function evaluateResult() {
+            const correctCount = gameState.selectedIngredients.filter(id => 
+                ingredients.find(ing => ing.id === id)?.correct
+            ).length;
+            return correctCount === 3 ? 'bueno' : 'malo';
+        }
+
+        function showResult() {
+            const result = evaluateResult();
+            const correctCount = gameState.selectedIngredients.filter(id => 
+                ingredients.find(ing => ing.id === id)?.correct
+            ).length;
+
+            const resultConfig = {
+                bueno: {
+                    title: "🎉 ¡SALVASTE A SANTIAGO! 🎉",
+                    icon: "❤️",
+                    message: `¡Increíble, ${gameState.playerName}! La poción brilla con una luz dorada perfecta. Santiago bebe el elixir y su transformación se revierte completamente. Sus ojos recuperan su color humano y sonríe aliviado. ¡Lo has salvado!<br><br><em>Santiago está completamente curado y libre de la maldición del lobizón.</em>`
+                },
+                malo: {
+                    title: "💀 NO FUNCIONÓ LA POCIÓN 💀",
+                    icon: "💀",
+                    message: `Lo siento, ${gameState.playerName}... La poción burbujea con un color siniestro. Al beberla, Santiago grita de dolor mientras su transformación se acelera. Sus colmillos crecen, su cuerpo se cubre de pelo y sus ojos se vuelven salvajes. La maldición se ha completado...<br><br><em>Santiago se ha transformado completamente en lobizón. La aldea ya no está segura.</em>`
+                }
+            };
+
+            const config = resultConfig[result];
+            
+            document.getElementById('result-icon').textContent = config.icon;
+            document.getElementById('result-title').textContent = config.title;
+            document.getElementById('result-message').innerHTML = config.message;
+            
+            // Mostrar ingredientes utilizados
+            const resultGrid = document.getElementById('result-ingredients');
+            resultGrid.innerHTML = '';
+            
+            gameState.selectedIngredients.forEach(id => {
+                const ingredient = ingredients.find(ing => ing.id === id);
+                const div = document.createElement('div');
+                div.className = `result-item ${ingredient.correct ? 'result-correct' : 'result-incorrect'}`;
+                div.textContent = `${ingredient.icon} ${ingredient.name} ${ingredient.correct ? '✓' : '✗'}`;
+                resultGrid.appendChild(div);
+            });
+            
+            document.getElementById('result-count').textContent = `Ingredientes correctos: ${correctCount}/3`;
+            
+            showScreen('resultado');
+        }
+
+        function resetGame() {
+            gameState = {
+                currentScreen: 'nombre',
+                playerName: '',
+                selectedIngredients: [],
+                visitedLocations: []
+            };
+            
+            document.getElementById('player-name').value = '';
+            updateStartButton();
+            showScreen('nombre');
+            document.getElementById('player-name').focus();
+        }
+
+        function updateStartButton() {
+            const nameInput = document.getElementById('player-name');
+            const startBtn = document.getElementById('start-btn');
+            const name = nameInput.value.trim();
+            
+            gameState.playerName = name;
+            startBtn.disabled = name === '';
+        }
+
+        // Función para actualizar botones de navegación según el contexto
+        function updateNavigationButtons() {
+            const fromIngredients = gameState.selectedIngredients.length > 0;
+            
+            // Actualizar botones de navegación
+            const toCasaBtn = document.getElementById('to-casa-btn');
+            const backToBosqueBtn = document.getElementById('back-to-bosque-btn');
+            const toRioBtn = document.getElementById('to-rio-btn');
+            const backToCasaBtn = document.getElementById('back-to-casa-btn');
+            const toIngredientesBtn = document.getElementById('to-ingredientes-btn');
+            
+            if (fromIngredients) {
+                // Si venimos de ingredientes, cambiar textos de botones
+                if (toCasaBtn) {
+                    toCasaBtn.textContent = '← Volver a Ingredientes';
+                    toCasaBtn.onclick = () => {
+                        document.getElementById('player-name-ingredients').textContent = gameState.playerName;
+                        updateIngredientsDisplay();
+                        updateSelectedCount();
+                        showScreen('ingredientes');
+                    };
+                }
+                
+                if (toRioBtn) {
+                    toRioBtn.textContent = '← Volver a Ingredientes';
+                    toRioBtn.onclick = () => {
+                        document.getElementById('player-name-ingredients').textContent = gameState.playerName;
+                        updateIngredientsDisplay();
+                        updateSelectedCount();
+                        showScreen('ingredientes');
+                    };
+                }
+                
+                if (toIngredientesBtn) {
+                    toIngredientesBtn.textContent = '← Volver a Ingredientes';
+                    toIngredientesBtn.onclick = () => {
+                        document.getElementById('player-name-ingredients').textContent = gameState.playerName;
+                        updateIngredientsDisplay();
+                        updateSelectedCount();
+                        showScreen('ingredientes');
+                    };
+                }
+            } else {
+                // Comportamiento normal
+                if (toCasaBtn) {
+                    toCasaBtn.textContent = 'Continuar a la Casa →';
+                    toCasaBtn.onclick = () => showScreen('casa');
+                }
+                
+                if (toRioBtn) {
+                    toRioBtn.textContent = 'Continuar al Río →';
+                    toRioBtn.onclick = () => showScreen('rio');
+                }
+                
+                if (toIngredientesBtn) {
+                    toIngredientesBtn.textContent = 'Preparar la Poción →';
+                    toIngredientesBtn.onclick = () => {
+                        document.getElementById('player-name-ingredients').textContent = gameState.playerName;
+                        updateIngredientsDisplay();
+                        updateSelectedCount();
+                        showScreen('ingredientes');
+                    };
+                }
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pantalla de nombre
+            const nameInput = document.getElementById('player-name');
+            const startBtn = document.getElementById('start-btn');
+            
+            // Múltiples eventos para asegurar que funcione
+            nameInput.addEventListener('input', updateStartButton);
+            nameInput.addEventListener('keyup', updateStartButton);
+            nameInput.addEventListener('change', updateStartButton);
+            
+            nameInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && gameState.playerName !== '') {
+                    document.getElementById('player-name-intro').textContent = gameState.playerName;
+                    showScreen('intro');
+                }
+            });
+            
+            startBtn.addEventListener('click', function() {
+                if (gameState.playerName !== '') {
+                    document.getElementById('player-name-intro').textContent = gameState.playerName;
+                    showScreen('intro');
+                }
+            });
+
+            // Navegación entre pantallas
+            document.getElementById('start-quest-btn').addEventListener('click', () => showScreen('bosque'));
+            document.getElementById('back-to-intro-btn').addEventListener('click', () => showScreen('intro'));
+
+            document.getElementById('back-to-bosque-btn').addEventListener('click', () => {
+                if (gameState.selectedIngredients.length > 0) {
+                    document.getElementById('player-name-ingredients').textContent = gameState.playerName;
+                    updateIngredientsDisplay();
+                    updateSelectedCount();
+                    showScreen('ingredientes');
+                } else {
+                    showScreen('bosque');
+                }
+            });
+
+            document.getElementById('back-to-casa-btn').addEventListener('click', () => {
+                if (gameState.selectedIngredients.length > 0) {
+                    document.getElementById('player-name-ingredients').textContent = gameState.playerName;
+                    updateIngredientsDisplay();
+                    updateSelectedCount();
+                    showScreen('ingredientes');
+                } else {
+                    showScreen('casa');
+                }
+            });
+            
+            document.getElementById('create-potion-btn').addEventListener('click', showResult);
+            document.getElementById('play-again-btn').addEventListener('click', resetGame);
+            document.getElementById('change-ingredients-btn').addEventListener('click', () => {
+                updateIngredientsDisplay();
+                updateSelectedCount();
+                showScreen('ingredientes');
+            });
+
+            // Botones para revisar pistas desde la pantalla de ingredientes
+            document.getElementById('review-bosque-btn').addEventListener('click', () => showScreen('bosque'));
+            document.getElementById('review-casa-btn').addEventListener('click', () => showScreen('casa'));
+            document.getElementById('review-rio-btn').addEventListener('click', () => showScreen('rio'));
+
+            // Inicializar el juego
+            showScreen('nombre');
+            nameInput.focus();
+        });
+    </script>
+</body>
+</html>
